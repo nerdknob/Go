@@ -20,11 +20,11 @@ Save your changes.
 
 * Change directories to the directory timezones was cloned/downloaded
 
-	`cd ~/Timezones`
+	`$ cd ~/Timezones`
 
 * Build the Go app. Use `-o` to give the app a custom name
 
-	`go build -o timezones main.go`
+	`$ go build -o timezones main.go`
 	
 This creates the executable in the same directory as the source code. Move the executable to a location within your $PATH variable so that you can launch the application from any location in your terminal
 
