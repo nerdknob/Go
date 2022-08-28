@@ -119,6 +119,8 @@ func (g *Game) dealHands(t *tableRender) {
 		t.playerActions[0].Show()
 	} else {
 		t.playerActions[1].Show()
+		g.Players[0].PlayersTurn = false
+		g.Players[1].PlayersTurn = true
 	}
 	t.Refresh()
 }
