@@ -25,17 +25,16 @@ type Game struct {
 }
 
 type Player struct {
-	Name          string
-	Chips         int
-	Hand          []*Card
-	Bet           int
-	Score         int
-	Chip          *canvas.Image
-	PlayersTurn   bool
-	PlayersAction bool
-	HiddenCard    bool
-	DoubleDown    bool
-	Quit          bool
+	Name        string
+	Chips       int
+	Hand        []*Card
+	Bet         int
+	Score       int
+	Chip        *canvas.Image
+	PlayersTurn bool
+	HiddenCard  bool
+	DoubleDown  bool
+	Quit        bool
 }
 
 func NewGame() *Game {
@@ -93,6 +92,13 @@ func action(t *tableRender, s string) {
 			case "Split":
 
 			case "Double Down":
+				t.game.Players[i].Chips = t.game.Players[i].Chips - t.game.Players[i].Bet
+				t.game.Players[i].Bet = t.game.Players[i].Bet * 2
+				card := t.game.Deck.DealCard()
+				t.game.Players[i].Hand = append(t.game.Players[i].Hand, card)
+
+				setNextPlayer(t, i)
+				t.Refresh()
 			}
 
 			break
@@ -109,8 +115,6 @@ func (g *Game) dealHands(t *tableRender) {
 	}
 	g.updateScores(t)
 	g.state = "Player Actions"
-	//////////////////////////// Bug - Player 1's actions are still active if they are dealt backjack.
-	//////////////////////////// Need to investigate refreshing the widget to loop through again once player 2 is set as active
 	if g.Players[0].Score != 21 {
 		t.playerActions[0].Show()
 	} else {
@@ -124,7 +128,6 @@ func (g *Game) initPlayers(num int) {
 		g.Players = append(g.Players, &Player{Chips: g.startingChips})
 	}
 	g.Players[0].PlayersTurn = true
-	g.Players[0].PlayersAction = true
 }
 
 func (g *Game) getNumberOfPlayers(t *tableRender) {
@@ -292,6 +295,8 @@ func (g *Game) playerActions(t *tableRender) {
 			if g.Players[i].Hand[0].Rank == g.Players[i].Hand[1].Rank {
 				b4.Enable()
 			}
+		} else {
+			b3.Disable()
 		}
 
 		msg := canvas.NewText(fmt.Sprintf("%v's turn", g.Players[i].Name), color.NRGBA{R: 255, G: 255, B: 255, A: 255})
@@ -390,7 +395,6 @@ func (g *Game) resetTable(t *tableRender) {
 			}
 		}
 		g.Players[0].PlayersTurn = true
-		g.Players[0].PlayersAction = true
 
 		// Reset Dealer
 		t.game.Dealer.Hand = []*Card{}

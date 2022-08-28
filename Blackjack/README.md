@@ -11,7 +11,6 @@ This game was made as a project to refine my knowledge of Go and explore the Fyn
 ![alt text](screenshot.png)
 
 ## Upcoming features:
-* Double Down
 * Split
 * Ability to remove players from table before next deal
 * Animations
